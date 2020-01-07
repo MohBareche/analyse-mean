@@ -2,6 +2,22 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 const morgan = require('morgan')
+const passport = require('passport')
+const mongoose = require('mongoose')
+const keys = require('./config/keys')
+
+// Connection à la base de données
+mongoose.connect(keys.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+  })
+  .then(() => console.log('Connecté à la base de données...'))
+  .catch(error => console.error('Impossible de se connecter à la base de données ! ', error))
+
+app.use(passport.initialize())
+require('./middleware/passport')(passport)
 
 const authRoutes = require('./routes/auth')
 const analyticsRoutes = require('./routes/analytics')
